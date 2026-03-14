@@ -67,7 +67,7 @@ export function ViewLogEntriesTable({ logId, setEditEntry }: ViewLogEntriesTable
   function logEntryRow(logEntry: LogEntryResponse) {
     return (
       <tr key={logEntry.id}>
-        <td>{DateTime.fromJSDate(new Date(logEntry?.logDate)).toFormat('MM/dd/yyyy')}</td>
+        <td>{DateTime.fromISO(String(logEntry.logDate), { zone: 'UTC' }).toFormat('MM/dd/yyyy')}</td>
         <td>{logEntry.logValue}</td>
         <td>{actions(logEntry)}</td>
       </tr>

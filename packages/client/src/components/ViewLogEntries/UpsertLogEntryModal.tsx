@@ -90,7 +90,7 @@ export function UpsertLogEntryModal({
       logValue: { value: string };
     };
     const logEntry = {
-      logDate: new Date(target.logDate.value),
+      logDate: target.logDate.value,
       logValue: parseInt(target.logValue.value, 10),
     };
 
@@ -110,7 +110,7 @@ export function UpsertLogEntryModal({
         logValue: { value: string };
     };
     const logEntry = {
-      logDate: new Date(target.logDate.value),
+      logDate: target.logDate.value,
       logValue: parseInt(target.logValue.value, 10),
     };
 
@@ -126,7 +126,7 @@ export function UpsertLogEntryModal({
   }, [type, handleEdit, editInfo])
   
   const defaultDate = editInfo?.logDate
-    ? DateTime.fromJSDate(new Date(editInfo?.logDate)).toFormat('yyyy-MM-dd') ?? undefined
+    ? DateTime.fromISO(String(editInfo.logDate), { zone: 'UTC' }).toFormat('yyyy-MM-dd')
     : undefined
 
   return (
