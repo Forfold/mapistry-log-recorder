@@ -16,7 +16,7 @@ export async function fetchLogEntries(
   logId: string,
 ): Promise<FetchLogEntriesResponse> {
   const res = await fetch(`/api/logs/${logId}/log-entries`, {
-    method: 'get',
+    method: 'GET',
     headers: {
       'content-type': 'application/json',
     },
@@ -34,7 +34,7 @@ export async function createLogEntry({
 }: CreateLogEntryParams): Promise<CreateLogEntryResponse> {
   const res = await fetch(`/api/logs/${logId}/log-entries`, {
     body: JSON.stringify({ logEntry }),
-    method: 'post',
+    method: 'POST',
     headers: {
       'content-type': 'application/json',
     },
@@ -50,7 +50,7 @@ export async function editLogEntry(logEntry: LogEntryResponse) {
   const { logId, id } = logEntry;
   const res = await fetch(`/api/logs/${logId}/log-entries/${id}`, {
     body: JSON.stringify({ logEntry }),
-    method: 'patch',
+    method: 'PATCH',
     headers: {
       'content-type': 'application/json',
     },
@@ -65,7 +65,7 @@ export async function editLogEntry(logEntry: LogEntryResponse) {
 export async function deleteLogEntry(logEntry: LogEntryResponse) {
   const { logId, id } = logEntry;
   const res = await fetch(`/api/logs/${logId}/log-entries/${id}`, {
-    method: 'delete',
+    method: 'DELETE',
     headers: {
       'content-type': 'application/json',
     },

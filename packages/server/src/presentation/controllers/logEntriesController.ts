@@ -46,7 +46,6 @@ logEntriesController.patch('/logs/:logId/log-entries/:logEntryId',
         res.status(HttpStatusCode.SERVER_ERROR);
         res.send();
       }
-      res.json();
     }
   }
 )
