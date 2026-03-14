@@ -36,7 +36,6 @@ logEntriesController.patch('/logs/:logId/log-entries/:logEntryId',
     const { logEntry } = req.body;
     const logEntryService = new LogEntriesService();
     try {
-      // edit log entry
       const logEntries = await logEntryService.editLogEntry(logId, logEntryId, logEntry)
       res.json(logEntries);
     } catch (e) {

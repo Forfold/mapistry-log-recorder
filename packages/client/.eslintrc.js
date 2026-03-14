@@ -11,6 +11,7 @@ module.exports = {
   plugins: ['react-hooks'],
   rules: {
     'react/function-component-definition': 'off',
+    'react/require-default-props': 'off',
     'react/jsx-filename-extension': ['warn', { extensions: ['.jsx', '.tsx'] }],
     // 'react/jsx-curly-newline': 'off',
     // 'react/jsx-indent-props': 'off',

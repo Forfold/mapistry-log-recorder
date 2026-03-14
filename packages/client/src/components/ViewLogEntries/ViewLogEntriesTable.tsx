@@ -1,11 +1,13 @@
 import { LogEntryResponse } from '@mapistry/take-home-challenge-shared';
 import { useCallback } from 'react';
 import styled from 'styled-components';
+import { DateTime } from 'luxon';
 import { useLogEntries } from '../../hooks/useLogEntries';
 import { deleteLogEntry } from '../../shared/apiClient/logsApi';
 
 interface ViewLogEntriesTableProps {
   logId: string;
+  setEditEntry: (logEntry: LogEntryResponse) => void
 }
 
 const StyledTable = styled.table`
@@ -24,7 +26,7 @@ const StyledTable = styled.table`
   }
 `;
 
-export function ViewLogEntriesTable({ logId }: ViewLogEntriesTableProps) {
+export function ViewLogEntriesTable({ logId, setEditEntry }: ViewLogEntriesTableProps) {
   const { logEntries, refreshLogEntries } = useLogEntries({ logId });
   const handleDelete = useCallback(
     async (logEntry) => {
@@ -52,7 +54,7 @@ export function ViewLogEntriesTable({ logId }: ViewLogEntriesTableProps) {
   function actions(logEntry: LogEntryResponse) {
     return (
       <div>
-        <button type="button" style={{ marginRight: '0.5rem' }}>
+        <button type="button" style={{ marginRight: '0.5rem' }} onClick={() => setEditEntry(logEntry)}>
           Edit
         </button>
         <button type="button" onClick={() => handleDelete(logEntry)}>
@@ -65,7 +67,7 @@ export function ViewLogEntriesTable({ logId }: ViewLogEntriesTableProps) {
   function logEntryRow(logEntry: LogEntryResponse) {
     return (
       <tr key={logEntry.id}>
-        <td>{new Date(logEntry.logDate).toLocaleDateString()}</td>
+        <td>{DateTime.fromJSDate(new Date(logEntry?.logDate)).toFormat('MM/dd/yyyy')}</td>
         <td>{logEntry.logValue}</td>
         <td>{actions(logEntry)}</td>
       </tr>
