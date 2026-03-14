@@ -1,6 +1,7 @@
 import {
   CreateLogEntryRequest,
   LogEntryResponse,
+  UpdateLogEntryRequest,
 } from '@mapistry/take-home-challenge-shared';
 import { LogEntriesQueryRepository } from '../../persistence/repositories/LogEntriesQueryRepository';
 import { LogEntriesRepository } from '../../persistence/repositories/LogEntriesRepository';
@@ -21,6 +22,14 @@ export class LogEntriesService {
     const repository = new LogEntriesRepository(logId);
     const newEntry = await repository.createLogEntry(logEntry);
     return mapper.toResponse(newEntry);
+  }
+
+  async editLogEntry(logId: string, logEntryId: string, updatedLogEntry: UpdateLogEntryRequest): Promise<LogEntryResponse> {
+    const mapper = new LogEntriesApiMapper();
+    const logEntry = mapper.fromUpdateRequest(logId, logEntryId, updatedLogEntry);
+    const repository = new LogEntriesRepository(logId);
+    const updatedEntry = await repository.updateLogEntry(logEntry)
+    return mapper.toResponse(updatedEntry);
   }
 
   async deleteLogEntry(logId: string, logEntryId: string): Promise<string> {

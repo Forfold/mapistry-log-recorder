@@ -4,7 +4,7 @@ import { RecordNotFoundError } from '../../shared/errors';
 import { LogEntriesPersistenceMapper } from '../mappers/LogEntriesPersistenceMapper';
 
 export class LogEntriesRepository {
-  constructor(protected logId: string) {}
+  constructor(protected logId: string) { }
 
   async createLogEntry(logEntry: LogEntry): Promise<LogEntry> {
     const dto = LogEntriesPersistenceMapper.toPersistence(logEntry);
@@ -20,6 +20,12 @@ export class LogEntriesRepository {
       );
     }
     return LogEntriesPersistenceMapper.fromPersistence(record);
+  }
+
+  async updateLogEntry(updatedLogEntry: LogEntry): Promise<LogEntry> {
+    const dto = LogEntriesPersistenceMapper.toPersistence(updatedLogEntry);
+    await Database.updateLogEntry(dto)
+    return updatedLogEntry
   }
 
   async destroyLogEntry(logEntry: LogEntry): Promise<string> {
