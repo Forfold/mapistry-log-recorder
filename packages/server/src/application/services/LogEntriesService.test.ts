@@ -64,8 +64,6 @@ describe('LogEntriesService', () => {
       const newValue = 42;
 
       const result = await subject.editLogEntry(LOG_2_ID, entry!.id, {
-        id: entry.id,
-        logId: LOG_2_ID,
         logDate: newDate,
         logValue: newValue,
       });

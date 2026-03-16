@@ -1,4 +1,4 @@
-import { LogEntryResponse } from '@mapistry/take-home-challenge-shared';
+import { LogEntryResponse, UpdateLogEntryRequest } from '@mapistry/take-home-challenge-shared';
 import { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import { useLastVisitedLog } from '../../hooks/useLastVisitedLog';
@@ -44,11 +44,12 @@ export function ViewLogEntries() {
     setEditEntry(undefined);
   }, [setEditEntry]);
 
-  const handleEditLogEntry = useCallback(async (logEntry: LogEntryResponse) => {
-    await editLogEntry(logEntry)
+  const handleEditLogEntry = useCallback(async (logEntry: UpdateLogEntryRequest) => {
+    if (!editEntry) return;
+    await editLogEntry({ ...editEntry, ...logEntry });
     handleCloseEdit()
     refreshLogEntries();
-  }, [handleCloseEdit, refreshLogEntries])
+  }, [editEntry, handleCloseEdit, refreshLogEntries])
 
   function content() {
     if (isLoading) {
