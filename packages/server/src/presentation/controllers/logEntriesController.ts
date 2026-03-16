@@ -30,14 +30,12 @@ logEntriesController.post('/logs/:logId/log-entries', async (req, res) => {
   }
 });
 
-
-
-logEntriesController.put('/logs/:logId/log-entries/:logEntryId', async (req: Request, res: Response) => {
+async function handlePutOrPatch(req: Request, res: Response, put = false) {
   const { logId, logEntryId } = req.params;
   const { logEntry } = req.body;
   const logEntryService = new LogEntriesService();
   try {
-    const logEntries = await logEntryService.editLogEntry(logId, logEntryId, logEntry, true)
+    const logEntries = await logEntryService.editLogEntry(logId, logEntryId, logEntry, put)
     res.json(logEntries);
   } catch (e) {
     if (e instanceof RecordNotFoundError || e instanceof ValidationError) {
@@ -48,24 +46,14 @@ logEntriesController.put('/logs/:logId/log-entries/:logEntryId', async (req: Req
       res.send();
     }
   }
+}
+
+logEntriesController.put('/logs/:logId/log-entries/:logEntryId', async (req: Request, res: Response) => {
+  await handlePutOrPatch(req, res, true)
 })
 
 logEntriesController.patch('/logs/:logId/log-entries/:logEntryId', async (req: Request, res: Response) => {
-  const { logId, logEntryId } = req.params;
-  const { logEntry } = req.body;
-  const logEntryService = new LogEntriesService();
-  try {
-    const logEntries = await logEntryService.editLogEntry(logId, logEntryId, logEntry)
-    res.json(logEntries);
-  } catch (e) {
-    if (e instanceof RecordNotFoundError || e instanceof ValidationError) {
-      res.status(HttpStatusCode.INVALID_DATA);
-      res.send(e.toString());
-    } else {
-      res.status(HttpStatusCode.SERVER_ERROR);
-      res.send();
-    }
-  }
+  await handlePutOrPatch(req, res)
 })
 
 logEntriesController.delete(
