@@ -30,7 +30,27 @@ logEntriesController.post('/logs/:logId/log-entries', async (req, res) => {
   }
 });
 
-async function handleEditLogEntry(req: Request, res: Response) {
+
+
+logEntriesController.put('/logs/:logId/log-entries/:logEntryId', async (req: Request, res: Response) => {
+  const { logId, logEntryId } = req.params;
+  const { logEntry } = req.body;
+  const logEntryService = new LogEntriesService();
+  try {
+    const logEntries = await logEntryService.editLogEntry(logId, logEntryId, logEntry, true)
+    res.json(logEntries);
+  } catch (e) {
+    if (e instanceof RecordNotFoundError || e instanceof ValidationError) {
+      res.status(HttpStatusCode.INVALID_DATA);
+      res.send(e.toString());
+    } else {
+      res.status(HttpStatusCode.SERVER_ERROR);
+      res.send();
+    }
+  }
+})
+
+logEntriesController.patch('/logs/:logId/log-entries/:logEntryId', async (req: Request, res: Response) => {
   const { logId, logEntryId } = req.params;
   const { logEntry } = req.body;
   const logEntryService = new LogEntriesService();
@@ -46,10 +66,7 @@ async function handleEditLogEntry(req: Request, res: Response) {
       res.send();
     }
   }
-}
-
-logEntriesController.put('/logs/:logId/log-entries/:logEntryId', handleEditLogEntry)
-logEntriesController.patch('/logs/:logId/log-entries/:logEntryId', handleEditLogEntry)
+})
 
 logEntriesController.delete(
   '/logs/:logId/log-entries/:logEntryId',

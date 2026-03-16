@@ -12,6 +12,11 @@ type CreateLogEntryProps = LogEntryProps;
 
 export class LogEntry extends Entity<LogEntryProps> {
   static createFromPersistence(props: LogEntryProps, id: string) {
+    if (!this.isValid(props)) {
+      throw new ValidationError(
+        'Cannot create log entry. Props are not valid.',
+      );
+    }
     return new LogEntry(props, Uuid.create(id));
   }
 
@@ -25,7 +30,12 @@ export class LogEntry extends Entity<LogEntryProps> {
   }
 
   private static isValid(createLogEntryProps: CreateLogEntryProps): boolean {
-    return typeof createLogEntryProps.logValue === 'number';
+    return (
+      typeof createLogEntryProps.logValue === 'number' &&
+      Number.isFinite(createLogEntryProps.logValue) &&
+      createLogEntryProps.logDate instanceof Date &&
+      !Number.isNaN(createLogEntryProps.logDate.getTime())
+    );
   }
 
   get logDate() {

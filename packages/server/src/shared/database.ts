@@ -80,10 +80,11 @@ export class Database {
       throw new RecordNotFoundError()
     }
 
-    const c = allEntries[index]
     allEntries[index] = {
-      ...c,
-      ...updatedEntry,
+      id: updatedEntry.id,
+      logId: updatedEntry.logId,
+      logDate: updatedEntry.logDate,
+      logValue: updatedEntry.logValue,
     }
     fs.writeFileSync(FILE_NAME, JSON.stringify(allEntries));
     return allEntries[index];

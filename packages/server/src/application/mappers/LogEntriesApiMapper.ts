@@ -1,7 +1,7 @@
 import {
   CreateLogEntryRequest,
+  DateLike,
   LogEntryResponse,
-  UpdateLogEntryRequest,
 } from '@mapistry/take-home-challenge-shared';
 import { LogEntry } from '../../domain/entities/LogEntry';
 
@@ -27,14 +27,12 @@ export class LogEntriesApiMapper {
   }
 
   public fromUpdateRequest(
-    logId: string,
-    logEntryId: string,
-    updatedLogEntry: UpdateLogEntryRequest,
+    logId: string, logEntryId: string, logDate: DateLike, logValue: number,
   ): LogEntry {
     return LogEntry.createFromPersistence({
       logId,
-      logDate: new Date(updatedLogEntry.logDate),
-      logValue: updatedLogEntry.logValue,
+      logDate: new Date(logDate),
+      logValue,
     }, logEntryId);
   }
 }
