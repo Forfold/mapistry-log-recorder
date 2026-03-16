@@ -38,8 +38,11 @@ async function handlePutOrPatch(req: Request, res: Response, put = false) {
     const logEntries = await logEntryService.editLogEntry(logId, logEntryId, logEntry, put)
     res.json(logEntries);
   } catch (e) {
-    if (e instanceof RecordNotFoundError || e instanceof ValidationError) {
+    if (e instanceof ValidationError) {
       res.status(HttpStatusCode.INVALID_DATA);
+      res.send(e.toString());
+    } else if (e instanceof RecordNotFoundError) {
+      res.status(HttpStatusCode.NOT_FOUND);
       res.send(e.toString());
     } else {
       res.status(HttpStatusCode.SERVER_ERROR);
@@ -69,7 +72,7 @@ logEntriesController.delete(
       res.json(logEntries);
     } catch (e: unknown) {
       if (e instanceof RecordNotFoundError) {
-        res.status(HttpStatusCode.INVALID_DATA);
+        res.status(HttpStatusCode.NOT_FOUND);
         res.send(e.toString());
       } else {
         res.status(HttpStatusCode.SERVER_ERROR);
