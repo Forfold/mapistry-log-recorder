@@ -60,7 +60,7 @@ export function ViewLogEntries() {
       );
     }
     return logEntries.length ? (
-      <ViewLogEntriesTable logId={lastVisitedLog.id} setEditEntry={setEditEntry}/>
+      <ViewLogEntriesTable logEntries={logEntries} refreshLogEntries={refreshLogEntries} setEditEntry={setEditEntry}/>
     ) : (
       <ViewLogEntriesEmptyPage />
     );

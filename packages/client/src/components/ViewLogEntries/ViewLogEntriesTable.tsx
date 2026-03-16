@@ -2,11 +2,11 @@ import { LogEntryResponse } from '@mapistry/take-home-challenge-shared';
 import { useCallback } from 'react';
 import styled from 'styled-components';
 import { DateTime } from 'luxon';
-import { useLogEntries } from '../../hooks/useLogEntries';
-import { deleteLogEntry } from '../../shared/apiClient/logsApi';
+import { FetchLogEntriesResponse, deleteLogEntry } from '../../shared/apiClient/logsApi';
 
 interface ViewLogEntriesTableProps {
-  logId: string;
+  logEntries: FetchLogEntriesResponse;
+  refreshLogEntries: () => void;
   setEditEntry: (logEntry: LogEntryResponse) => void
 }
 
@@ -26,10 +26,9 @@ const StyledTable = styled.table`
   }
 `;
 
-export function ViewLogEntriesTable({ logId, setEditEntry }: ViewLogEntriesTableProps) {
-  const { logEntries, refreshLogEntries } = useLogEntries({ logId });
+export function ViewLogEntriesTable({ logEntries, refreshLogEntries, setEditEntry }: ViewLogEntriesTableProps) {
   const handleDelete = useCallback(
-    async (logEntry) => {
+    async (logEntry: LogEntryResponse) => {
       // eslint-disable-next-line no-restricted-globals, no-alert
       if (confirm('Are you sure?')) {
         await deleteLogEntry(logEntry);
