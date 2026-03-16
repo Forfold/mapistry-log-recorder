@@ -13,7 +13,7 @@ export class LogEntriesPersistenceMapper {
 
   static fromPersistence(logEntriesRecord: LogEntriesRecord): LogEntry {
     return LogEntry.createFromPersistence(
-      logEntriesRecord,
+      { ...logEntriesRecord, logDate: new Date(logEntriesRecord.logDate) },
       logEntriesRecord.id,
     );
   }
