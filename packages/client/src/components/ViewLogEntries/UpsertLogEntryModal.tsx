@@ -82,7 +82,7 @@ export function UpsertLogEntryModal({
   const type: 'create' | 'edit' = typeof handleEdit === 'function' ? 'edit' : 'create'
 
   const onCreateSubmit = useCallback((event: React.SyntheticEvent) => {
-    if (type !== 'create' && typeof handleCreate !== 'function') return
+    if (type !== 'create' || typeof handleCreate !== 'function') return
 
     event.preventDefault();
     const target = event.target as typeof event.target & {
@@ -102,7 +102,7 @@ export function UpsertLogEntryModal({
   }, [type, handleCreate])
 
   const onEditSubmit = useCallback((event: React.SyntheticEvent) => {
-    if (type !== 'edit' && typeof handleEdit !== 'function') return
+    if (type !== 'edit' || typeof handleEdit !== 'function') return
 
     event.preventDefault()
     const target = event.target as typeof event.target & {
@@ -116,8 +116,6 @@ export function UpsertLogEntryModal({
 
     if (handleEdit && editInfo) {
       handleEdit({
-        id: editInfo.id,
-        logId: editInfo.logId,
         ...logEntry,
       });
     } else {
