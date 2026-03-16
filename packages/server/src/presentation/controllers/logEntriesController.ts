@@ -1,5 +1,5 @@
 import { HttpStatusCode } from '@mapistry/take-home-challenge-shared';
-import { Router } from 'express';
+import { Request, Response, Router } from 'express';
 import { LogEntriesService } from '../../application/services/LogEntriesService';
 import { RecordNotFoundError, ValidationError } from '../../shared/errors';
 
@@ -30,25 +30,26 @@ logEntriesController.post('/logs/:logId/log-entries', async (req, res) => {
   }
 });
 
-logEntriesController.patch('/logs/:logId/log-entries/:logEntryId',
-  async (req, res) => {
-    const { logId, logEntryId } = req.params;
-    const { logEntry } = req.body;
-    const logEntryService = new LogEntriesService();
-    try {
-      const logEntries = await logEntryService.editLogEntry(logId, logEntryId, logEntry)
-      res.json(logEntries);
-    } catch (e) {
-      if (e instanceof RecordNotFoundError || e instanceof ValidationError) {
-        res.status(HttpStatusCode.INVALID_DATA);
-        res.send(e.toString());
-      } else {
-        res.status(HttpStatusCode.SERVER_ERROR);
-        res.send();
-      }
+async function handleEditLogEntry(req: Request, res: Response) {
+  const { logId, logEntryId } = req.params;
+  const { logEntry } = req.body;
+  const logEntryService = new LogEntriesService();
+  try {
+    const logEntries = await logEntryService.editLogEntry(logId, logEntryId, logEntry)
+    res.json(logEntries);
+  } catch (e) {
+    if (e instanceof RecordNotFoundError || e instanceof ValidationError) {
+      res.status(HttpStatusCode.INVALID_DATA);
+      res.send(e.toString());
+    } else {
+      res.status(HttpStatusCode.SERVER_ERROR);
+      res.send();
     }
   }
-)
+}
+
+logEntriesController.put('/logs/:logId/log-entries/:logEntryId', handleEditLogEntry)
+logEntriesController.patch('/logs/:logId/log-entries/:logEntryId', handleEditLogEntry)
 
 logEntriesController.delete(
   '/logs/:logId/log-entries/:logEntryId',
@@ -69,7 +70,6 @@ logEntriesController.delete(
         res.status(HttpStatusCode.SERVER_ERROR);
         res.send();
       }
-      res.json();
     }
   },
 );
