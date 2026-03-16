@@ -3,11 +3,20 @@ import {
   LOG_2_ID,
   LogEntryResponse,
 } from '@mapistry/take-home-challenge-shared';
+import fs from 'fs';
 import { Database, LogEntriesRecord } from '../../shared/database';
 import { LogEntriesService } from './LogEntriesService';
 
 describe('LogEntriesService', () => {
   const subject = new LogEntriesService();
+
+  beforeAll(() => {
+    try {
+      fs.unlinkSync('database');
+    } catch {
+      // file doesn't exist, seed will be used on first read
+    }
+  });
 
   describe('getLogEntries', () => {
     let result: LogEntryResponse[];
@@ -47,6 +56,25 @@ describe('LogEntriesService', () => {
       expect(result.id).toBeDefined();
     });
   });
+
+  describe('editLogEntry', () => {
+    it('edits a log entry', async () => {
+      const [entry] = await Database.getAllLogEntries(LOG_2_ID);
+      const newDate = new Date();
+      const newValue = 42;
+
+      const result = await subject.editLogEntry(LOG_2_ID, entry!.id, {
+        id: entry.id,
+        logId: LOG_2_ID,
+        logDate: newDate,
+        logValue: newValue,
+      });
+
+      expect(result.id).toBeDefined();
+      expect(result.logDate).toEqual(newDate);
+      expect(result.logValue).toEqual(newValue);
+    });
+  })
 
   describe('deleteLogEntry', () => {
     let entryToDelete: LogEntriesRecord | undefined;
